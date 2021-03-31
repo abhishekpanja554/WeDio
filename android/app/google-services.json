@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "307789734463",
+    "project_id": "wedio-fb1c2",
+    "storage_bucket": "wedio-fb1c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307789734463:android:500f9741cd68f02b758e8a",
+        "android_client_info": {
+          "package_name": "com.example.WEdio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "307789734463-o25gie16r6qn81as2223ae7sr7rs0s6u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.WEdio",
+            "certificate_hash": "013f7359d3eba13c17dcf63161605c16a80303ea"
+          }
+        },
+        {
+          "client_id": "307789734463-qpjvns0h4vhkh4e2mtersvvqdeatp7pc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp3-qvG5wCyAnx3Fwhx83ZhpuJYf0ZGh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "307789734463-qpjvns0h4vhkh4e2mtersvvqdeatp7pc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
