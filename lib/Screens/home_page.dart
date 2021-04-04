@@ -1,4 +1,7 @@
 import 'package:WEdio/Screens/tab_pages/home_tab.dart';
+// import 'package:WEdio/backend/firebase_helper.dart';
+// import 'package:WEdio/global_variables.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +21,8 @@ class _HomePageState extends State<HomePage> {
     pageController = PageController();
     super.initState();
   }
+
+  
 
   void onPageChanged(newPage) {
     setState(() {

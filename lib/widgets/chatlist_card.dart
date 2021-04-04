@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ChatListCard extends StatelessWidget {
+  final String title;
+
+  ChatListCard({required this.title});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -18,14 +21,13 @@ class ChatListCard extends StatelessWidget {
                 color: Colors.blueAccent,
                 blurRadius: 15,
                 spreadRadius: -10,
-                offset: Offset(-5, -5),
+                offset: Offset(-5, -3),
               ),
             ],
             gradient: LinearGradient(
               begin: FractionalOffset.topLeft,
               end: FractionalOffset.bottomRight,
               colors: [
-                Color(0xFF1F4385),
                 Color(0xFF244E91),
                 Color(0xFF2A57A0),
                 Color(0xFF244E91),
@@ -33,9 +35,8 @@ class ChatListCard extends StatelessWidget {
               ],
               stops: [
                 0,
-                0.25,
-                0.5,
-                0.75,
+                0.3,
+                0.6,
                 1,
               ],
             ),
@@ -70,7 +71,7 @@ class ChatListCard extends StatelessWidget {
                       children: [
                         Container(
                           child: Text(
-                            'Abhishek Panja',
+                            title,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
