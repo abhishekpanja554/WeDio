@@ -1,9 +1,10 @@
+import 'package:WEdio/models/user.dart';
 import 'package:flutter/material.dart';
 
 class ChatListCard extends StatelessWidget {
-  final String title;
+  final User chatUser;
 
-  ChatListCard({required this.title});
+  ChatListCard({required this.chatUser});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -71,7 +72,7 @@ class ChatListCard extends StatelessWidget {
                       children: [
                         Container(
                           child: Text(
-                            title,
+                            chatUser.fullname,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,

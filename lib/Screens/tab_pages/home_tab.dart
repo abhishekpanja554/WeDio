@@ -1,3 +1,4 @@
+import 'package:WEdio/Screens/chat_page.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
 import 'package:WEdio/global_variables.dart';
 import 'package:WEdio/widgets/chatlist_card.dart';
@@ -36,11 +37,46 @@ class _HomeTabState extends State<HomeTab> {
           future: getInitialData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: Text('Please wait its loading...'));
+              return Center(
+                child: Container(
+                  height: 500,
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        'Loading Chats...!!!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontFamily: 'Quicksand-Regular',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             } else {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  return ChatListCard(title: usersList[index].fullname);
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                            chatParticipant: usersList[index],
+                          ),
+                        ),
+                      );
+                    },
+                    child: ChatListCard(
+                      chatUser: usersList[index],
+                    ),
+                  );
                 },
                 itemCount: usersList.length,
               );

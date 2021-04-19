@@ -22,8 +22,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  
-
   void onPageChanged(newPage) {
     setState(() {
       _currentPage = newPage;
@@ -68,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.red,
       appBar: AppBar(
-        elevation: 2,
+        elevation: 15,
         toolbarHeight: 70,
         leading: Container(
           padding: EdgeInsets.only(left: 20),
