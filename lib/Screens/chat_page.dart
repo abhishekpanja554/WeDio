@@ -1,4 +1,5 @@
 import 'package:WEdio/backend/firebase_helper.dart';
+import 'package:WEdio/models/message.dart';
 import 'package:WEdio/models/user.dart';
 import 'package:WEdio/widgets/chat_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,6 +26,20 @@ class _ChatPageState extends State<ChatPage>
   TextEditingController messageController = TextEditingController();
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseHelper _helper = FirebaseHelper();
+
+  void sendMessage() {
+    String messageText = messageController.text;
+    Message message = Message(
+      content: messageText,
+      sender: _helper.getCurrentUser()!.uid,
+      timeStamp: FieldValue.serverTimestamp(),
+      type: 'text',
+      conversationId: widget.conversationId,
+    );
+    _helper.sendMessageToDB(message);
+    messageController.clear();
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
 
   @override
   void initState() {
@@ -96,6 +111,7 @@ class _ChatPageState extends State<ChatPage>
               stream: _firestore
                   .collection('messages')
                   .where('conversation_id', isEqualTo: widget.conversationId)
+                  .orderBy('time_stamp',descending: false)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -199,10 +215,15 @@ class _ChatPageState extends State<ChatPage>
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        FontAwesomeIcons.solidPaperPlane,
-                        color: Color(0xFF5775A0),
-                        size: 25,
+                      child: GestureDetector(
+                        onTap: () {
+                          sendMessage();
+                        },
+                        child: Icon(
+                          FontAwesomeIcons.solidPaperPlane,
+                          color: Color(0xFF5775A0),
+                          size: 25,
+                        ),
                       ),
                     ),
                   ),

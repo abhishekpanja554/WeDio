@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:WEdio/global_variables.dart';
+import 'package:WEdio/models/message.dart';
 import 'package:WEdio/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -39,7 +40,7 @@ class FirebaseHelper {
   //   return docs.length == 0 ? true : false;
   // }
 
-  Future <List<Map<String, dynamic>>> getAllUsers(List chatList) async {
+  Future<List<Map<String, dynamic>>> getAllUsers(List chatList) async {
     List<Map<String, dynamic>> users = [];
     for (var item in chatList) {
       var i =
@@ -56,6 +57,11 @@ class FirebaseHelper {
     //   }
     // }
     return users;
+  }
+
+  Future<void> sendMessageToDB(Message message) async {
+    Map<String, dynamic> map = message.toMap();
+    await _firestore.collection('messages').add(map);
   }
 
   Future<List> getChatList(auth.User? currentUser) async {
