@@ -2,7 +2,7 @@ import 'package:WEdio/models/user.dart';
 import 'package:flutter/material.dart';
 
 class ChatListCard extends StatelessWidget {
-  final User chatUser;
+  final User? chatUser;
 
   ChatListCard({required this.chatUser});
   @override
@@ -10,14 +10,22 @@ class ChatListCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 10),
+          margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
-            color: Color(0xFF1F4385),
+            gradient: LinearGradient(
+              colors: [
+                Colors.white,
+                Color(0xFF2A57A0),
+                Color(0xFF1F4385),
+              ],
+              stops: [
+                0,
+                0.5,
+                1,
+              ],
+            ),
             borderRadius: BorderRadius.circular(5),
             boxShadow: [
-              // BoxShadow(
-              //   color: Color(0xFF1F4385),
-              // ),
               BoxShadow(
                 color: Colors.blueAccent,
                 blurRadius: 15,
@@ -25,77 +33,87 @@ class ChatListCard extends StatelessWidget {
                 offset: Offset(-5, -3),
               ),
             ],
-            gradient: LinearGradient(
-              begin: FractionalOffset.topLeft,
-              end: FractionalOffset.bottomRight,
-              colors: [
-                Color(0xFF244E91),
-                Color(0xFF2A57A0),
-                Color(0xFF244E91),
-                Color(0xFF1F4385),
-              ],
-              stops: [
-                0,
-                0.3,
-                0.6,
-                1,
-              ],
-            ),
           ),
-          child: Column(
-            children: [
-              Row(
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0xFF1F4385),
+                borderRadius: BorderRadius.circular(5),
+                gradient: LinearGradient(
+                  begin: FractionalOffset.topLeft,
+                  end: FractionalOffset.bottomRight,
+                  colors: [
+                    Color(0xFF244E91),
+                    Color(0xFF2A57A0),
+                    Color(0xFF244E91),
+                    Color(0xFF1F4385),
+                  ],
+                  stops: [
+                    0,
+                    0.3,
+                    0.6,
+                    1,
+                  ],
+                ),
+              ),
+              child: Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        'AP',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 23,
-                          fontFamily: 'Quicksand-SemiBold',
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
+                  Row(
+                    children: [
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            shape: BoxShape.circle,
+                          ),
                           child: Text(
-                            chatUser.fullname,
+                            'AP',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 23,
+                              fontFamily: 'Quicksand-SemiBold',
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                          child: Text(
-                            'Hi, how are you?',
-                            style: TextStyle(
-                              color: Colors.blueGrey.shade100,
+                      ),
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              child: Text(
+                                chatUser!.fullname,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
                             ),
-                          ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Container(
+                              child: Text(
+                                'Hi, how are you?',
+                                style: TextStyle(
+                                  color: Colors.blueGrey.shade100,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
         SizedBox(

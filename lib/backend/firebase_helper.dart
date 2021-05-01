@@ -39,11 +39,15 @@ class FirebaseHelper {
   //   return docs.length == 0 ? true : false;
   // }
 
-  Future<List<User>> getAllUsers(List chatList) async {
-    List<User> users = [];
+  Future <List<Map<String, dynamic>>> getAllUsers(List chatList) async {
+    List<Map<String, dynamic>> users = [];
     for (var item in chatList) {
-      var i = await _firestore.collection('users').doc(item).get();
-      users.add(User.fromDocument(i));
+      var i =
+          await _firestore.collection('users').doc(item['participantId']).get();
+      users.add({
+        "user": User.fromDocument(i),
+        "conversationId": item['conversationId']
+      });
     }
     // QuerySnapshot result = await _firestore.collection('users').get();
     // for (int i = 0; i < result.size; i++) {
@@ -71,12 +75,49 @@ class FirebaseHelper {
         )
         .get();
     res1.docs.forEach((element) {
-      chatList.add(element.data()?['person2']);
+      chatList.add({
+        "participantId": element.data()?['person2'],
+        "conversationId": element.data()?['conversation_id']
+      });
     });
     res2.docs.forEach((element) {
-      chatList.add(element.data()?['person1']);
+      chatList.add({
+        "participantId": element.data()?['person1'],
+        "conversationId": element.data()?['conversation_id']
+      });
     });
 
     return chatList;
   }
+
+  // Future<String> getConversationId(
+  //     User participantUID, auth.User? currentUser) async {
+  //   QuerySnapshot res;
+  //   res = await _firestore
+  //       .collection('conversations')
+  //       .where(
+  //         'person1',
+  //         isEqualTo: participantUID.uid,
+  //       )
+  //       .where(
+  //         'person2',
+  //         isEqualTo: currentUser!.uid,
+  //       )
+  //       .get();
+  //   if (res.size == 0) {
+  //     res = await _firestore
+  //         .collection('conversations')
+  //         .where(
+  //           'person1',
+  //           isEqualTo: currentUser.uid,
+  //         )
+  //         .where(
+  //           'person2',
+  //           isEqualTo: participantUID.uid,
+  //         )
+  //         .get();
+  //   }
+
+  //   return res.docs.first.id;
+  // }
 }

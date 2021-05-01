@@ -17,6 +17,7 @@ class _HomeTabState extends State<HomeTab> {
   Future<Null> getInitialData() async {
     await helper.getChatList(helper.getCurrentUser()).then((value) async {
       chatList = value;
+      chatList.forEach((element) {print(element);});
       usersList = await helper.getAllUsers(value);
     });
   }
@@ -32,6 +33,7 @@ class _HomeTabState extends State<HomeTab> {
     return Scaffold(
       backgroundColor: Color(0xFF1F4385),
       body: Container(
+        padding: EdgeInsets.only(top: 5),
         color: Color(0xFF1F4385),
         child: FutureBuilder(
           future: getInitialData(),
@@ -68,13 +70,14 @@ class _HomeTabState extends State<HomeTab> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ChatPage(
-                            chatParticipant: usersList[index],
+                            chatParticipant: usersList[index]["user"],
+                            conversationId: usersList[index]["conversationId"],
                           ),
                         ),
                       );
                     },
                     child: ChatListCard(
-                      chatUser: usersList[index],
+                      chatUser: usersList[index]["user"],
                     ),
                   );
                 },
