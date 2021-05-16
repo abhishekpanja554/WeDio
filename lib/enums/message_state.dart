@@ -1,0 +1,4 @@
+enum MessageState{
+  Loading,
+  Done
+}

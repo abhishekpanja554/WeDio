@@ -1,10 +1,20 @@
+import 'package:WEdio/backend/firebase_helper.dart';
+import 'package:WEdio/backend/utility_class.dart';
 import 'package:WEdio/models/user.dart';
 import 'package:flutter/material.dart';
 
 class ChatListCard extends StatelessWidget {
   final User? chatUser;
+  final String lastMessage;
+  final bool isMe;
 
-  ChatListCard({required this.chatUser});
+  UtilityClass _utilityClass = UtilityClass();
+
+  ChatListCard({
+    required this.chatUser,
+    required this.lastMessage,
+    required this.isMe,
+  });
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -73,7 +83,7 @@ class ChatListCard extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                           child: Text(
-                            'AP',
+                            _utilityClass.getInitials(chatUser!.fullname),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 23,
@@ -100,7 +110,8 @@ class ChatListCard extends StatelessWidget {
                             ),
                             Container(
                               child: Text(
-                                'Hi, how are you?',
+                                lastMessage,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: Colors.blueGrey.shade100,
                                 ),

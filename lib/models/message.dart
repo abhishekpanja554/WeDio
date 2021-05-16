@@ -1,11 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Message {
   late String content;
   late String sender;
-  late FieldValue timeStamp;
+  late DateTime timeStamp;
   late String conversationId;
   late String type;
+  late bool isRead;
   late String imageUrl;
 
   Message({
@@ -14,6 +13,7 @@ class Message {
     required this.timeStamp,
     required this.type,
     required this.conversationId,
+    required this.isRead,
   });
 
   Message.imageMessage({
@@ -22,6 +22,8 @@ class Message {
     required this.timeStamp,
     required this.type,
     required this.imageUrl,
+    required this.conversationId,
+    required this.isRead,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,20 @@ class Message {
       'time_stamp': this.timeStamp,
       'type': this.type,
       'conversation_id': this.conversationId,
+      'isRead': this.isRead,
+    };
+    return map;
+  }
+
+  Map<String, dynamic> toImageMsgMap(){
+    Map<String, dynamic> map = {
+      'content': this.content,
+      'sender': this.sender,
+      'time_stamp': this.timeStamp,
+      'type': this.type,
+      'conversation_id': this.conversationId,
+      'isRead': this.isRead,
+      'image_url':this.imageUrl,
     };
     return map;
   }
@@ -41,5 +57,6 @@ class Message {
     this.timeStamp = map['time_stamp'];
     this.type = map['type'];
     this.conversationId = map['conversation_id'];
+    this.isRead = map['isRead'];
   }
 }

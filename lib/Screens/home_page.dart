@@ -1,4 +1,6 @@
+import 'package:WEdio/Screens/tab_pages/contacts_tab.dart';
 import 'package:WEdio/Screens/tab_pages/home_tab.dart';
+import 'package:WEdio/backend/firebase_helper.dart';
 // import 'package:WEdio/backend/firebase_helper.dart';
 // import 'package:WEdio/global_variables.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -15,9 +17,11 @@ class _HomePageState extends State<HomePage> {
   late PageController pageController;
   String appBarTitle = 'Chat';
   int _currentPage = 0;
+  FirebaseHelper _helper = FirebaseHelper();
 
   @override
   void initState() {
+    _helper.updateContacts(context);
     pageController = PageController();
     super.initState();
   }
@@ -102,14 +106,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Center(
-            child: Text(
-              "Contact Screen",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
+          ContactTab(),
           Center(
             child: Text(
               "Settings",

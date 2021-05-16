@@ -1,10 +1,21 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:WEdio/backend/firebase_helper.dart';
+import 'package:WEdio/enums/message_state.dart';
 import 'package:WEdio/models/message.dart';
 import 'package:WEdio/models/user.dart';
+import 'package:WEdio/providers/image_message_provider.dart';
 import 'package:WEdio/widgets/chat_bubble.dart';
+import 'package:WEdio/widgets/image_loading_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   static const String id = 'chatpage';
@@ -26,19 +37,36 @@ class _ChatPageState extends State<ChatPage>
   TextEditingController messageController = TextEditingController();
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseHelper _helper = FirebaseHelper();
+  ScrollController scrollController = new ScrollController();
+  late ImageMessageProvider _imageMessageProvider;
 
   void sendMessage() {
     String messageText = messageController.text;
     Message message = Message(
       content: messageText,
       sender: _helper.getCurrentUser()!.uid,
-      timeStamp: FieldValue.serverTimestamp(),
+      timeStamp: DateTime.now(),
       type: 'text',
       conversationId: widget.conversationId,
+      isRead: false,
     );
-    _helper.sendMessageToDB(message);
+    _helper.sendMessageToDB(message, widget.conversationId);
     messageController.clear();
     FocusScope.of(context).requestFocus(FocusNode());
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+  }
+
+  void sendReadAchk(bool isRead, String id) async {
+    await _firestore.collection('messages').doc(id).update({'isRead': true});
+  }
+
+  void pickImage({required ImageSource source}) async {
+    ImagePicker picker = ImagePicker();
+    PickedFile pickedFile = (await picker.getImage(source: source))!;
+
+    File chosenImage = File(pickedFile.path);
+    await _helper.uploadImage(
+        chosenImage, widget.conversationId, _imageMessageProvider);
   }
 
   @override
@@ -66,6 +94,7 @@ class _ChatPageState extends State<ChatPage>
 
   @override
   Widget build(BuildContext context) {
+    _imageMessageProvider = Provider.of<ImageMessageProvider>(context);
     return Scaffold(
       backgroundColor: Color(0xFF1F4385),
       appBar: AppBar(
@@ -111,18 +140,47 @@ class _ChatPageState extends State<ChatPage>
               stream: _firestore
                   .collection('messages')
                   .where('conversation_id', isEqualTo: widget.conversationId)
-                  .orderBy('time_stamp',descending: false)
+                  .orderBy('time_stamp', descending: false)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  SchedulerBinding.instance!.addPostFrameCallback((_) {
+                    scrollController.jumpTo(
+                      scrollController.position.maxScrollExtent,
+                    );
+                  });
+
                   return ListView.builder(
+                    controller: scrollController,
                     itemBuilder: (context, index) {
+                      String time = DateFormat.jm().format(
+                          (snapshot.data!.docs[index].data()['time_stamp'])
+                              .toDate());
+
+                      String date = DateFormat.yMMMMd().format(
+                          (snapshot.data!.docs[index].data()['time_stamp'])
+                              .toDate());
+                      bool isRead =
+                          snapshot.data!.docs[index].data()['isRead'] == null
+                              ? null
+                              : snapshot.data!.docs[index].data()['isRead'];
+                      if (!isRead &&
+                          !(snapshot.data!.docs[index].data()['sender'] ==
+                              _helper.getCurrentUser()!.uid)) {
+                        sendReadAchk(isRead, snapshot.data!.docs[index].id);
+                      }
+
                       return ChatBubble(
-                        message: snapshot.data!.docs[index].data()?['content'],
-                        isMe: snapshot.data!.docs[index].data()?['sender'] ==
+                        message: snapshot.data!.docs[index].data()['content'],
+                        isMe: snapshot.data!.docs[index].data()['sender'] ==
                                 _helper.getCurrentUser()!.uid
                             ? true
                             : false,
+                        time: time,
+                        date: date,
+                        isRead: isRead,
+                        type: snapshot.data!.docs[index].data()['type'],
+                        url: snapshot.data!.docs[index].data()['image_url']??'',
                       );
                     },
                     itemCount: snapshot.data!.docs.length,
@@ -135,6 +193,9 @@ class _ChatPageState extends State<ChatPage>
               },
             ),
           ),
+          _imageMessageProvider.getMessageState == MessageState.Loading
+              ? ImageLoadingBubble()
+              : Container(),
           Container(
             margin: EdgeInsets.only(bottom: 10),
             child: Row(
@@ -158,15 +219,81 @@ class _ChatPageState extends State<ChatPage>
                         SizedBox(
                           width: 7,
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blue,
-                          ),
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 30,
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  height: 260,
+                                  margin: EdgeInsets.all(20),
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 3,
+                                    ),
+                                    color: Color(0xFF1F4385),
+                                  ),
+                                  child: GridView.count(
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    crossAxisCount: 3,
+                                    children: [
+                                      ModalGridTile(
+                                        title: 'Camera',
+                                        circleBackground: Colors.purpleAccent,
+                                        icon: Icons.camera_alt,
+                                        iconSize: 30,
+                                      ),
+                                      ModalGridTile(
+                                        title: 'Document',
+                                        circleBackground: Colors.blueAccent,
+                                        icon: FontAwesomeIcons.fileAlt,
+                                        iconSize: 25,
+                                      ),
+                                      ModalGridTile(
+                                        title: 'Galary',
+                                        circleBackground: Colors.pinkAccent,
+                                        icon: Icons.image,
+                                        iconSize: 30,
+                                      ),
+                                      ModalGridTile(
+                                        title: 'Location',
+                                        circleBackground: Colors.greenAccent,
+                                        icon: Icons.location_on,
+                                        iconSize: 30,
+                                      ),
+                                      ModalGridTile(
+                                        title: 'Contact',
+                                        circleBackground:
+                                            Colors.lightBlueAccent,
+                                        icon: Icons.contact_phone,
+                                        iconSize: 30,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue,
+                            ),
+                            child: Transform.rotate(
+                              angle: pi / 4,
+                              child: Icon(
+                                Icons.attach_file_rounded,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -187,7 +314,8 @@ class _ChatPageState extends State<ChatPage>
                               filled: true,
                               fillColor: Color(0xFFC5CEDD),
                               suffixIcon: GestureDetector(
-                                onTap: () {},
+                                onTap: () =>
+                                    pickImage(source: ImageSource.camera),
                                 child: Icon(
                                   Icons.camera_alt,
                                   color: Colors.blueGrey,
@@ -206,8 +334,8 @@ class _ChatPageState extends State<ChatPage>
                 ),
                 SlideTransition(
                   position: _animation,
-                  child: InkWell(
-                    onTap: () {},
+                  child: GestureDetector(
+                    onTap: sendMessage,
                     child: Container(
                       width: (MediaQuery.of(context).size.width) * 0.125,
                       height: 50,
@@ -215,15 +343,10 @@ class _ChatPageState extends State<ChatPage>
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
-                      child: GestureDetector(
-                        onTap: () {
-                          sendMessage();
-                        },
-                        child: Icon(
-                          FontAwesomeIcons.solidPaperPlane,
-                          color: Color(0xFF5775A0),
-                          size: 25,
-                        ),
+                      child: Icon(
+                        FontAwesomeIcons.solidPaperPlane,
+                        color: Color(0xFF5775A0),
+                        size: 25,
                       ),
                     ),
                   ),
@@ -235,35 +358,48 @@ class _ChatPageState extends State<ChatPage>
       ),
     );
   }
+}
 
-  Widget senderLayout() {
-    Radius messageRadius = Radius.circular(30);
+class ModalGridTile extends StatelessWidget {
+  final String title;
+  final Color circleBackground;
+  final IconData icon;
+  final double iconSize;
 
-    return Container(
-      margin: EdgeInsets.only(top: 12),
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.only(
-          topLeft: messageRadius,
-          bottomLeft: messageRadius,
-        ),
-      ),
-      child: Container(
-        margin: EdgeInsets.all(5),
-        padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Colors.blue,
-        ),
-        child: Text(
-          "Hello How Are youfghdfhsfghdsfghdsfghdfsghdfghdfghdghdfghdfghdfhdfghdfghdfhdfgh??",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
+  ModalGridTile({
+    required this.title,
+    required this.icon,
+    required this.circleBackground,
+    required this.iconSize,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Color(0xFF5775A0),
+      elevation: 4,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 15,
           ),
-        ),
+          CircleAvatar(
+            radius: 25,
+            backgroundColor: circleBackground,
+            child: Icon(
+              icon,
+              size: iconSize,
+            ),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }

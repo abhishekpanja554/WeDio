@@ -1,9 +1,11 @@
 import 'package:WEdio/Screens/home_page.dart';
 import 'package:WEdio/Screens/signip_page.dart';
+import 'package:WEdio/backend/firebase_helper.dart';
 import 'package:WEdio/widgets/custom_loading.dart';
 import 'package:WEdio/widgets/custom_textField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
 class LoginPage extends StatefulWidget {
   static const String id = 'loginpage';
@@ -15,16 +17,17 @@ class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  FirebaseHelper _helper = FirebaseHelper();
 
   void login() async {
     showDialog(
         context: context,
-        barrierDismissible: true,
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return CustomLoading();
         });
 
-    UserCredential userCredential = await FirebaseAuth.instance
+    await FirebaseAuth.instance
         .signInWithEmailAndPassword(
             email: emailController.text, password: passwordController.text)
         .catchError((ex) {
@@ -35,7 +38,21 @@ class _LoginPageState extends State<LoginPage>
       ));
     });
 
-    Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false);
+    // await _helper.deleteTable();
+
+    // Database db = await _helper.createContactDb();
+
+    // await _helper.updateContacts(context);
+    // // List<User> contactsList = [];
+    // await _helper.getAllAvailableCOntacts().then((value) {
+    //   value.forEach((element) async {
+    //     if (_helper.getCurrentUser()!.uid != element.uid) {
+    //       await _helper.insertContactIntoDb(
+    //           db, element.uid, element.fullname, element.phone);
+    //     }
+    //   });
+      Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false);
+    // });
   }
 
   @override
