@@ -51,7 +51,7 @@ class ImageLoadingBubble extends StatelessWidget {
                           // color: Colors.blueAccent,
                         ),
                         alignment: Alignment.centerRight,
-                        height: 100,
+                        height: 270,
                         child: Lottie.asset(
                           'lotti_animations/image-loading.json',
                         ),

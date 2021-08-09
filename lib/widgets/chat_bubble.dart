@@ -1,3 +1,4 @@
+import 'package:WEdio/Screens/image_fullscreen.dart';
 import 'package:WEdio/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ class ChatBubble extends StatelessWidget {
   final String type;
 
   final String url;
+
   ChatBubble({
     required this.message,
     required this.isMe,
@@ -92,7 +94,18 @@ class ChatBubble extends StatelessWidget {
                                 fontSize: 16,
                               ),
                             )
-                          : CachedImage(url: url),
+                          : GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ImageFullscreen(url: url),
+                                  ),
+                                );
+                              },
+                              child: CachedImage(url: url),
+                            ),
                     ),
                     isMe
                         ? Container(

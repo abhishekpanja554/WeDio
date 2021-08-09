@@ -3,18 +3,24 @@ import 'package:WEdio/backend/utility_class.dart';
 import 'package:WEdio/models/user.dart';
 import 'package:flutter/material.dart';
 
-class ChatListCard extends StatelessWidget {
+class ChatListCard extends StatefulWidget {
   final User? chatUser;
   final String lastMessage;
   final bool isMe;
-
-  UtilityClass _utilityClass = UtilityClass();
 
   ChatListCard({
     required this.chatUser,
     required this.lastMessage,
     required this.isMe,
   });
+
+  @override
+  _ChatListCardState createState() => _ChatListCardState();
+}
+
+class _ChatListCardState extends State<ChatListCard> {
+  UtilityClass _utilityClass = UtilityClass();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -83,7 +89,7 @@ class ChatListCard extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                           child: Text(
-                            _utilityClass.getInitials(chatUser!.fullname),
+                            _utilityClass.getInitials(widget.chatUser!.fullname),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 23,
@@ -98,7 +104,7 @@ class ChatListCard extends StatelessWidget {
                           children: [
                             Container(
                               child: Text(
-                                chatUser!.fullname,
+                                widget.chatUser!.fullname,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
@@ -110,7 +116,7 @@ class ChatListCard extends StatelessWidget {
                             ),
                             Container(
                               child: Text(
-                                lastMessage,
+                                widget.lastMessage,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: Colors.blueGrey.shade100,
