@@ -15,7 +15,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:requestLegacyExternalStorage="true"
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="WEdio"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -23,7 +23,7 @@ class User {
     this.phone = mapData['phone'];
   }
 
-  User.fromDocument(DocumentSnapshot doc) {
+  User.fromDocument(DocumentSnapshot<Map> doc) {
     this.uid = doc.id;
     this.email = doc.data()?['email'];
     this.fullname = doc.data()?['fullname'];

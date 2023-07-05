@@ -63,7 +63,7 @@ class _ChatPageState extends State<ChatPage>
 
   void pickImage({required ImageSource source}) async {
     ImagePicker picker = ImagePicker();
-    PickedFile pickedFile = (await picker.getImage(source: source))!;
+    XFile pickedFile = (await picker.pickImage(source: source))!;
 
     File chosenImage = File(pickedFile.path);
     await _helper.uploadImage(
@@ -106,7 +106,8 @@ class _ChatPageState extends State<ChatPage>
             .collection('Call')
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.hasData && (snapshot.data as dynamic).docs.length > 0 &&
+          if (snapshot.hasData &&
+              (snapshot.data as dynamic).docs.length > 0 &&
               (snapshot.data as dynamic).docs['recieverId'] ==
                   _helper.getCurrentUser()!.uid) {
             return RecieverScreen();
@@ -176,7 +177,7 @@ class _ChatPageState extends State<ChatPage>
             body: Column(
               children: [
                 Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
+                  child: StreamBuilder<QuerySnapshot<Map>>(
                     stream: _firestore
                         .collection('messages')
                         .where('conversation_id',

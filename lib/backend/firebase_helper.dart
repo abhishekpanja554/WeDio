@@ -105,7 +105,6 @@ class FirebaseHelper {
       }
 
       // });
-
     }
     return contactList;
   }
@@ -229,14 +228,14 @@ class FirebaseHelper {
 
   Future<List> getChatList(auth.User? currentUser) async {
     List chatList = [];
-    QuerySnapshot res1 = await _firestore
+    QuerySnapshot<Map> res1 = await _firestore
         .collection('conversations')
         .where(
           'person1',
           isEqualTo: currentUser!.uid,
         )
         .get();
-    QuerySnapshot res2 = await _firestore
+    QuerySnapshot<Map> res2 = await _firestore
         .collection('conversations')
         .where(
           'person2',
