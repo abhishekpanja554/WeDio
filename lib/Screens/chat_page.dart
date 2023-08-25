@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:WEdio/Screens/call_screen.dart';
 import 'package:WEdio/Screens/caller_screen.dart';
 import 'package:WEdio/Screens/reciever_screen.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
+import 'package:WEdio/backend/signalling.service.dart';
 import 'package:WEdio/backend/utility_class.dart';
 import 'package:WEdio/enums/message_state.dart';
 import 'package:WEdio/models/calls.dart';
@@ -41,6 +43,7 @@ class _ChatPageState extends State<ChatPage>
   FirebaseHelper _helper = FirebaseHelper();
   late ScrollController scrollController;
   late ImageMessageProvider _imageMessageProvider;
+  dynamic incomingSDPOffer;
 
   void sendMessage() {
     String messageText = messageController.text;
@@ -86,6 +89,14 @@ class _ChatPageState extends State<ChatPage>
       parent: _animationController,
       curve: Curves.easeInOutQuad,
     ));
+
+    // listen for incoming video call
+    SignallingService.instance.socket!.on("newCall", (data) {
+      if (mounted) {
+        // set SDP Offer of incoming call
+        setState(() => incomingSDPOffer = data);
+      }
+    });
     super.initState();
   }
 
@@ -157,9 +168,11 @@ class _ChatPageState extends State<ChatPage>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CallerScreen(
-                            conversationId: widget.conversationId,
-                            call: call,
+                          builder: (context) => CallScreen(
+                            calleeId: widget.chatParticipant!.uid,
+                            callerId: _helper.getCurrentUser()!.uid,
+                            // conversationId: widget.conversationId,
+                            // call: call,
                           ),
                         ),
                       );

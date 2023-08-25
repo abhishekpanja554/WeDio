@@ -1,4 +1,3 @@
-import 'package:WEdio/backend/firebase_helper.dart';
 import 'package:WEdio/backend/utility_class.dart';
 import 'package:WEdio/models/user.dart';
 import 'package:flutter/material.dart';

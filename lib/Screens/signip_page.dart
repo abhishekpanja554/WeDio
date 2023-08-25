@@ -74,7 +74,7 @@ class _SignupPageState extends State<SignupPage>
       parent: _animationController,
       curve: Curves.easeInOutQuad,
     ));
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         profileIconPos = 0;
       });

@@ -1,10 +1,14 @@
+import 'dart:ui';
+
 import 'package:WEdio/Screens/home_page.dart';
 import 'package:WEdio/Screens/signip_page.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
 import 'package:WEdio/widgets/custom_loading.dart';
 import 'package:WEdio/widgets/custom_textField.dart';
+import 'package:WEdio/widgets/inapp_notification_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LoginPage extends StatefulWidget {
@@ -38,21 +42,22 @@ class _LoginPageState extends State<LoginPage>
       ));
     });
 
-    // await _helper.deleteTable();
+    await _helper.deleteTable();
 
-    // Database db = await _helper.createContactDb();
+    Database db = await _helper.createContactDb();
 
-    // await _helper.updateContacts(context);
-    // // List<User> contactsList = [];
-    // await _helper.getAllAvailableCOntacts().then((value) {
-    //   value.forEach((element) async {
-    //     if (_helper.getCurrentUser()!.uid != element.uid) {
-    //       await _helper.insertContactIntoDb(
-    //           db, element.uid, element.fullname, element.phone);
-    //     }
-    //   });
+    await _helper.updateContacts(context);
+    // List<User> contactsList = [];
+    await _helper.getAllAvailableCOntacts().then((value) {
+      value.forEach((element) async {
+        if (_helper.getCurrentUser()!.uid != element.uid) {
+          await _helper.insertContactIntoDb(
+              db, element.uid, element.fullname, element.phone);
+        }
+      });
+      Navigator.pop(context);
       Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false);
-    // });
+    });
   }
 
   @override

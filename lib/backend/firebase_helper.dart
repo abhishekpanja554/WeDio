@@ -4,12 +4,15 @@ import 'dart:io';
 
 import 'package:WEdio/global_variables.dart';
 import 'package:WEdio/models/message.dart';
-import 'package:WEdio/models/user.dart';
+import 'package:WEdio/models/user.dart' as usr;
 import 'package:WEdio/providers/image_message_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:contacts_service/contacts_service.dart';
+// import 'package:contacts_service/contacts_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -18,43 +21,45 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class FirebaseHelper {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
-  // GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignIn _googleSignIn = GoogleSignIn();
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   firebase_storage.FirebaseStorage storageRef =
       firebase_storage.FirebaseStorage.instance;
-  List<User> contactList = [];
+  List<usr.User> contactList = [];
 
   auth.User? getCurrentUser() {
     auth.User? currentUser;
     currentUser = _auth.currentUser;
     return currentUser;
   }
-  // Future<UserCredential> signIn() async {
-  //   GoogleSignInAccount _signInAcc = await (_googleSignIn.signIn() as FutureOr<GoogleSignInAccount>);
-  //   GoogleSignInAuthentication _signInAuth = await _signInAcc.authentication;
-  //   final AuthCredential credential = GoogleAuthProvider.credential(
-  //     accessToken: _signInAuth.accessToken,
-  //     idToken: _signInAuth.idToken,
-  //   );
-  //   UserCredential user = await _auth.signInWithCredential(credential);
-  //   return user;
-  // }
 
-  // Future<bool> authenticateUser(UserCredential user) async {
-  //   QuerySnapshot result = await _firestore
-  //       .collection("users")
-  //       .where("email", isEqualTo: user.user!.email)
-  //       .get();
+  Future<UserCredential> signIn() async {
+    GoogleSignInAccount _signInAcc =
+        await (_googleSignIn.signIn() as FutureOr<GoogleSignInAccount>);
+    GoogleSignInAuthentication _signInAuth = await _signInAcc.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: _signInAuth.accessToken,
+      idToken: _signInAuth.idToken,
+    );
+    UserCredential user = await _auth.signInWithCredential(credential);
+    return user;
+  }
 
-  //   final List<DocumentSnapshot> docs = result.docs;
+  Future<bool> authenticateUser(UserCredential user) async {
+    QuerySnapshot result = await _firestore
+        .collection("users")
+        .where("email", isEqualTo: user.user!.email)
+        .get();
 
-  //   return docs.length == 0 ? true : false;
-  // }
+    final List<DocumentSnapshot> docs = result.docs;
+
+    return docs.length == 0 ? true : false;
+  }
 
   Future<Null> updateContacts(context) async {
-    // final PermissionStatus permissionStatus = await _getPermission();
-    if (await Permission.contacts.request().isGranted) {
-      contacts = await ContactsService.getContacts(withThumbnails: false);
+    final PermissionStatus permissionStatus = await _getPermission();
+    if (permissionStatus.isGranted) {
+      contacts = await FlutterContacts.getContacts();
     } else {
       showDialog(
         context: context,
@@ -73,32 +78,33 @@ class FirebaseHelper {
     }
   }
 
-  // Future<PermissionStatus> _getPermission() async {
-  //   final PermissionStatus permission = await Permission.contacts.status;
-  //   if (permission != PermissionStatus.granted &&
-  //       permission != PermissionStatus.denied) {
-  //     final Map<Permission, PermissionStatus> permissionStatus =
-  //         await [Permission.contacts].request();
-  //     return permissionStatus[Permission.contacts] ??
-  //         PermissionStatus.restricted;
-  //   } else {
-  //     return permission;
-  //   }
-  // }
+  Future<PermissionStatus> _getPermission() async {
+    final PermissionStatus permission = await Permission.contacts.status;
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.denied) {
+      final Map<Permission, PermissionStatus> permissionStatus =
+          await [Permission.contacts].request();
+      return permissionStatus[Permission.contacts] ??
+          PermissionStatus.restricted;
+    } else {
+      return permission;
+    }
+  }
 
-  Future<List<User>> getAllAvailableCOntacts() async {
+  Future<List<usr.User>> getAllAvailableCOntacts() async {
     for (var i in contacts) {
       // i.phones!.forEach((element) async {
-      if (i.phones!.length > 0) {
+      if (i.phones.length > 0) {
         await _firestore
             .collection('users')
-            .where('phone', isEqualTo: i.phones!.first.value)
+            .where('phone', isEqualTo: i.phones.first.number)
             .get()
             .then((value) {
           if (value.docs.length > 0) {
-            if (!contactList.contains(User.fromDocument(value.docs[0])) ||
-                User.fromDocument(value.docs[0]).uid != getCurrentUser()!.uid) {
-              contactList.add(User.fromDocument(value.docs[0]));
+            if (!contactList.contains(usr.User.fromDocument(value.docs[0])) ||
+                usr.User.fromDocument(value.docs[0]).uid !=
+                    getCurrentUser()!.uid) {
+              contactList.add(usr.User.fromDocument(value.docs[0]));
             }
           }
         });
@@ -170,7 +176,7 @@ class FirebaseHelper {
       var i =
           await _firestore.collection('users').doc(item['participantId']).get();
       users.add({
-        "user": User.fromDocument(i),
+        "user": usr.User.fromDocument(i),
         "conversationId": item['conversationId'],
         "last_message": item['last_message'],
         "last_message_sender": item['last_message_sender'],
