@@ -171,6 +171,7 @@ class _ChatPageState extends State<ChatPage>
                           builder: (context) => CallScreen(
                             calleeId: widget.chatParticipant!.uid,
                             callerId: _helper.getCurrentUser()!.uid,
+                            calleeName: widget.chatParticipant!.fullname,
                             // conversationId: widget.conversationId,
                             // call: call,
                           ),

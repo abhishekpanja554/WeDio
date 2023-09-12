@@ -40,6 +40,7 @@ class _JoinScreenState extends State<JoinScreen> {
         builder: (_) => CallScreen(
           callerId: callerId,
           calleeId: calleeId,
+          calleeName: "0000",
           offer: offer,
         ),
       ),

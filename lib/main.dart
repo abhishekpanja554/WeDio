@@ -1,6 +1,7 @@
 // import 'dart:io';
 // import 'package:WEdio/Screens/chat_page.dart';
 import 'package:WEdio/Screens/signip_page.dart';
+import 'package:WEdio/Screens/splash.dart';
 import 'package:WEdio/global_variables.dart';
 import 'package:WEdio/providers/image_message_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -58,11 +59,12 @@ class _MyAppState extends State<MyApp> {
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          initialRoute: HomePage.id,
+          initialRoute: SplashScreen.id,
           routes: {
             HomePage.id: (context) => HomePage(),
             LoginPage.id: (context) => LoginPage(),
             SignupPage.id: (context) => SignupPage(),
+            SplashScreen.id: (context) => SplashScreen(),
           },
         ),
       ),

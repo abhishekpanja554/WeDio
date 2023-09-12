@@ -5,11 +5,13 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 class CallScreen extends StatefulWidget {
   final String callerId, calleeId;
   final dynamic offer;
+  final String calleeName;
   const CallScreen({
     key,
     this.offer,
     required this.callerId,
     required this.calleeId,
+    required this.calleeName,
   });
 
   @override
@@ -208,9 +210,37 @@ class _CallScreenState extends State<CallScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Color(0xFF1F4385),
       appBar: AppBar(
-        title: const Text("P2P Call App"),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        leading: Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Color(0xFF005DAF),
+                size: 30,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+        elevation: 15,
+        toolbarHeight: 70,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              widget.calleeName,
+              style: TextStyle(
+                color: Color(0xFF005DAF),
+                fontFamily: 'Quicksand-SemiBold',
+                fontSize: 26,
+              ),
+            ),
+          ],
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -224,39 +254,64 @@ class _CallScreenState extends State<CallScreen> {
                 Positioned(
                   right: 20,
                   bottom: 20,
-                  child: SizedBox(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 4),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     height: 150,
                     width: 120,
-                    child: RTCVideoView(
-                      _localRTCVideoRenderer,
-                      mirror: isFrontCameraSelected,
-                      objectFit:
-                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: RTCVideoView(
+                        _localRTCVideoRenderer,
+                        mirror: isFrontCameraSelected,
+                        objectFit:
+                            RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                      ),
                     ),
                   ),
                 )
               ]),
             ),
-            Padding(
+            Container(
+              height: 100,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16))),
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
-                    icon: Icon(isAudioOn ? Icons.mic : Icons.mic_off),
+                    icon: Icon(
+                      isAudioOn ? Icons.mic : Icons.mic_off,
+                      color: Color(0xFF005DAF),
+                    ),
                     onPressed: _toggleMic,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.call_end),
+                    icon: const Icon(
+                      Icons.call_end,
+                      color: Color(0xFF005DAF),
+                    ),
                     iconSize: 30,
                     onPressed: _leaveCall,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.cameraswitch),
+                    icon: const Icon(
+                      Icons.cameraswitch,
+                      color: Color(0xFF005DAF),
+                    ),
                     onPressed: _switchCamera,
                   ),
                   IconButton(
-                    icon: Icon(isVideoOn ? Icons.videocam : Icons.videocam_off),
+                    icon: Icon(
+                      isVideoOn ? Icons.videocam : Icons.videocam_off,
+                      color: Color(0xFF005DAF),
+                    ),
                     onPressed: _toggleCamera,
                   ),
                 ],

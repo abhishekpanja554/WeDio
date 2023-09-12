@@ -25,6 +25,7 @@ class NotificationBody extends StatelessWidget {
       NavigationService.navigatorKey.currentContext!,
       MaterialPageRoute(
         builder: (_) => CallScreen(
+          calleeName: "777",
           callerId: callerId,
           calleeId: calleeId,
           offer: offer,
@@ -101,7 +102,8 @@ class NotificationBody extends StatelessWidget {
                             ),
                             Expanded(
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   SizedBox(
@@ -114,7 +116,8 @@ class NotificationBody extends StatelessWidget {
                                                 Color(0xFF10c600)),
                                         padding: MaterialStateProperty.all<
                                                 EdgeInsetsGeometry?>(
-                                            EdgeInsets.symmetric(horizontal: 16)),
+                                            EdgeInsets.symmetric(
+                                                horizontal: 16)),
                                         shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
@@ -124,11 +127,17 @@ class NotificationBody extends StatelessWidget {
                                         ),
                                       ),
                                       onPressed: () {
-                                        _joinCall(callerId: offer["callerId"], calleeId: FirebaseHelper().getCurrentUser()!.uid);
-                                        InAppNotification.dismiss(context: context);
+                                        _joinCall(
+                                            callerId: offer["callerId"],
+                                            calleeId: FirebaseHelper()
+                                                .getCurrentUser()!
+                                                .uid);
+                                        InAppNotification.dismiss(
+                                            context: context);
                                       },
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.call_rounded,
@@ -161,7 +170,8 @@ class NotificationBody extends StatelessWidget {
                                         ),
                                         padding: MaterialStateProperty.all<
                                                 EdgeInsetsGeometry?>(
-                                            EdgeInsets.symmetric(horizontal: 16)),
+                                            EdgeInsets.symmetric(
+                                                horizontal: 16)),
                                         shape: MaterialStateProperty.all<
                                             RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
@@ -171,10 +181,12 @@ class NotificationBody extends StatelessWidget {
                                         ),
                                       ),
                                       onPressed: () {
-                                        InAppNotification.dismiss(context: context);
+                                        InAppNotification.dismiss(
+                                            context: context);
                                       },
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Icon(
                                             Icons.call_end_rounded,

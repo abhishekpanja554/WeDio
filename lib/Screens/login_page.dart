@@ -156,6 +156,7 @@ class _LoginPageState extends State<LoginPage>
                 ),
                 Container(
                   width: mediaQuery.size.width,
+                  padding: EdgeInsets.symmetric(horizontal: 48),
                   child: Column(
                     children: [
                       SizedBox(
@@ -163,7 +164,7 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       Container(
                         height: 50,
-                        width: 300,
+                        // width: 300,
                         child: CustomTextField(
                           controller: emailController,
                           hintAndLabelText: 'Email',
@@ -176,7 +177,7 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       Container(
                         height: 50,
-                        width: 300,
+                        // width: 300,
                         child: CustomTextField(
                           controller: passwordController,
                           hintAndLabelText: 'Password',
