@@ -2,34 +2,36 @@ import 'dart:ui';
 
 import 'package:WEdio/Screens/call_screen.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
+import 'package:WEdio/global_variables.dart';
 import 'package:WEdio/main.dart';
+import 'package:WEdio/models/class_models.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'package:go_router/go_router.dart';
+// import 'dart:math' as math;
 
 import 'package:in_app_notification/in_app_notification.dart';
 
-class NotificationBody extends StatelessWidget {
-  final dynamic offer;
-
+class NotificationBody extends StatefulWidget {
   NotificationBody({
     Key? key,
-    this.offer = 0,
   }) : super(key: key);
 
+  @override
+  State<NotificationBody> createState() => _NotificationBodyState();
+}
+
+class _NotificationBodyState extends State<NotificationBody> {
   _joinCall({
     required String callerId,
     required String calleeId,
-    dynamic offer,
   }) {
-    Navigator.push(
-      NavigationService.navigatorKey.currentContext!,
-      MaterialPageRoute(
-        builder: (_) => CallScreen(
-          calleeName: "777",
-          callerId: callerId,
-          calleeId: calleeId,
-          offer: offer,
-        ),
+    context.push(
+      CallScreen.id,
+      extra: CallScreenArgs(
+        calleeId: calleeId,
+        calleeName: "Contact",
+        callerId: callerId,
+        offer: incomingSDPOffer,
       ),
     );
   }
@@ -128,7 +130,8 @@ class NotificationBody extends StatelessWidget {
                                       ),
                                       onPressed: () {
                                         _joinCall(
-                                            callerId: offer["callerId"],
+                                            callerId:
+                                                incomingSDPOffer["callerId"],
                                             calleeId: FirebaseHelper()
                                                 .getCurrentUser()!
                                                 .uid);

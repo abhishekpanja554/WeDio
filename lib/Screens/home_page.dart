@@ -14,7 +14,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
 class HomePage extends StatefulWidget {
-  static const String id = 'homepage';
+  static const String id = '/homepage';
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -24,17 +24,16 @@ class _HomePageState extends State<HomePage> {
   String appBarTitle = 'Chat';
   int _currentPage = 0;
   FirebaseHelper _helper = FirebaseHelper();
-  dynamic incomingSDPOffer;
 
   @override
   void initState() {
     _helper.updateContacts(context);
     pageController = PageController();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      SignallingService.instance.init(
-        websocketUrl: websocketUrl,
-        selfCallerID: FirebaseHelper().getCurrentUser()!.uid,
-      );
+      // SignallingService.instance.init(
+      //   websocketUrl: websocketUrl,
+      //   selfCallerID: FirebaseHelper().getCurrentUser()!.uid,
+      // );
       // listen for incoming video call
       SignallingService.instance.socket!.on("newCall", (data) {
         if (mounted) {
@@ -44,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           });
           InAppNotification.show(
             duration: Duration(minutes: 100),
-            child: NotificationBody(offer: incomingSDPOffer),
+            child: NotificationBody(),
             context: context,
             onTap: () => print('Notification tapped!'),
           );
@@ -53,6 +52,7 @@ class _HomePageState extends State<HomePage> {
     });
     super.initState();
   }
+
   void onPageChanged(newPage) {
     setState(() {
       _currentPage = newPage;
@@ -96,16 +96,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.red,
-      floatingActionButton: FloatingActionButton(onPressed: ()async{
+      floatingActionButton: FloatingActionButton(onPressed: () async {
         final Dio _dio = Dio();
         final _baseUrl = 'http://192.168.29.245:3000/send_notification';
-        Response userData = await _dio.post(
-          _baseUrl,data: {
-            "fcmToken": fcmToken,
-          }
-
-        );
-        
+        Response userData = await _dio.post(_baseUrl, data: {
+          "fcmToken": fcmToken,
+        });
       }),
       appBar: AppBar(
         elevation: 15,

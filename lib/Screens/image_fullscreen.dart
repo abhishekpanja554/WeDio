@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
@@ -28,7 +29,7 @@ class ImageFullscreen extends StatelessWidget {
             Icons.arrow_back_ios_rounded,
             size: 30,
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => context.pop(),
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,7 +43,7 @@ class ImageFullscreen extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: (){
+              onPressed: () {
                 _save();
               },
               icon: Icon(

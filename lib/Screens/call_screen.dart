@@ -1,8 +1,10 @@
 import 'package:WEdio/backend/signalling.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:go_router/go_router.dart';
 
 class CallScreen extends StatefulWidget {
+  static const String id = '/callpage';
   final String callerId, calleeId;
   final dynamic offer;
   final String calleeName;
@@ -65,7 +67,7 @@ class _CallScreenState extends State<CallScreen> {
         {
           'urls': [
             'stun:stun1.l.google.com:19302',
-            'stun:stun2.l.google.com:19302'
+            'stun:stun2.l.google.com:19302',
           ]
         }
       ]
@@ -171,7 +173,7 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   _leaveCall() {
-    Navigator.pop(context);
+    context.pop();
   }
 
   _toggleMic() {
@@ -210,7 +212,7 @@ class _CallScreenState extends State<CallScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF1F4385),
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
@@ -222,7 +224,7 @@ class _CallScreenState extends State<CallScreen> {
                 color: Color(0xFF005DAF),
                 size: 30,
               ),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => context.pop(),
             ),
           ],
         ),
@@ -246,33 +248,35 @@ class _CallScreenState extends State<CallScreen> {
         child: Column(
           children: [
             Expanded(
-              child: Stack(children: [
-                RTCVideoView(
-                  _remoteRTCVideoRenderer,
-                  objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                ),
-                Positioned(
-                  right: 20,
-                  bottom: 20,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 4),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    height: 150,
-                    width: 120,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: RTCVideoView(
-                        _localRTCVideoRenderer,
-                        mirror: isFrontCameraSelected,
-                        objectFit:
-                            RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+              child: Stack(
+                children: [
+                  RTCVideoView(
+                    _remoteRTCVideoRenderer,
+                    objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                  ),
+                  Positioned(
+                    right: 20,
+                    bottom: 20,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 4),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      height: 150,
+                      width: 120,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: RTCVideoView(
+                          _localRTCVideoRenderer,
+                          mirror: isFrontCameraSelected,
+                          objectFit:
+                              RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ]),
+                  )
+                ],
+              ),
             ),
             Container(
               height: 100,
@@ -294,14 +298,6 @@ class _CallScreenState extends State<CallScreen> {
                   ),
                   IconButton(
                     icon: const Icon(
-                      Icons.call_end,
-                      color: Color(0xFF005DAF),
-                    ),
-                    iconSize: 30,
-                    onPressed: _leaveCall,
-                  ),
-                  IconButton(
-                    icon: const Icon(
                       Icons.cameraswitch,
                       color: Color(0xFF005DAF),
                     ),
@@ -313,6 +309,18 @@ class _CallScreenState extends State<CallScreen> {
                       color: Color(0xFF005DAF),
                     ),
                     onPressed: _toggleCamera,
+                  ),
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.redAccent,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.call_end,
+                        color: Colors.white,
+                      ),
+                      iconSize: 30,
+                      onPressed: _leaveCall,
+                    ),
                   ),
                 ],
               ),

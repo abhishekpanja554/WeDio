@@ -2,11 +2,16 @@
 // import 'package:WEdio/Screens/chat_page.dart';
 import 'package:WEdio/Screens/signip_page.dart';
 import 'package:WEdio/Screens/splash.dart';
+import 'package:WEdio/backend/firebase_helper.dart';
+import 'package:WEdio/backend/signalling.service.dart';
 import 'package:WEdio/global_variables.dart';
+import 'package:WEdio/helpers/route_helper.dart';
 import 'package:WEdio/providers/image_message_provider.dart';
+import 'package:WEdio/widgets/inapp_notification_body.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +20,7 @@ import 'Screens/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await Firebase.initializeApp(
+  await Firebase.initializeApp(
     name: 'wideo',
     options: FirebaseOptions(
         apiKey: "qvG5wCyAnx3Fwhx83ZhpuJYf0ZGh8",
@@ -46,12 +51,24 @@ class _MyAppState extends State<MyApp> {
   // FirebaseRepo _repo = FirebaseRepo();
 
   @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      SignallingService.instance.init(
+        websocketUrl: websocketUrl,
+        selfCallerID: FirebaseHelper().getCurrentUser()!.uid,
+      );
+      // listen for incoming video call
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ImageMessageProvider>(
       create: (context) => ImageMessageProvider(),
       child: InAppNotification(
-        child: MaterialApp(
-          navigatorKey: NavigationService.navigatorKey,
+        child: MaterialApp.router(
+          routerConfig: router,
           debugShowCheckedModeBanner: false,
           title: 'WEdio',
           theme: ThemeData(
@@ -59,13 +76,6 @@ class _MyAppState extends State<MyApp> {
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          initialRoute: SplashScreen.id,
-          routes: {
-            HomePage.id: (context) => HomePage(),
-            LoginPage.id: (context) => LoginPage(),
-            SignupPage.id: (context) => SignupPage(),
-            SplashScreen.id: (context) => SplashScreen(),
-          },
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:WEdio/backend/utility_class.dart';
 import 'package:WEdio/models/calls.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CallerScreen extends StatefulWidget {
   final String conversationId;
@@ -26,7 +27,7 @@ class _CallerScreenState extends State<CallerScreen> {
               ElevatedButton(
                 onPressed: () async {
                   await UtilityClass.endCall(widget.conversationId);
-                  Navigator.pop(context);
+                  context.pop();
                 },
                 child: Text('End Call'),
               ),

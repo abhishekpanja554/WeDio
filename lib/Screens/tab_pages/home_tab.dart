@@ -1,8 +1,10 @@
 import 'package:WEdio/Screens/chat_page.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
 import 'package:WEdio/global_variables.dart';
+import 'package:WEdio/models/class_models.dart';
 import 'package:WEdio/widgets/chatlist_card.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 class HomeTab extends StatefulWidget {
@@ -71,13 +73,11 @@ class _HomeTabState extends State<HomeTab>
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatPage(
-                            chatParticipant: usersList[index]["user"],
-                            conversationId: usersList[index]["conversationId"],
-                          ),
+                      context.push(
+                        ChatPage.id,
+                        extra: ChatPageArgs(
+                          chatParticipant: usersList[index]["user"],
+                          conversationId: usersList[index]["conversationId"],
                         ),
                       );
                     },

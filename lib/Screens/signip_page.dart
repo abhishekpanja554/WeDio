@@ -6,9 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupPage extends StatefulWidget {
-  static const String id = 'signuppage';
+  static const String id = '/signuppage';
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -41,7 +42,7 @@ class _SignupPageState extends State<SignupPage>
         .createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text)
         .catchError((ex) {
-      Navigator.pop(context);
+      context.pop();
       FirebaseAuthException thisEx = ex;
       ScaffoldMessenger.maybeOf(context)!.showSnackBar(SnackBar(
         content: Text(thisEx.message!),
@@ -57,7 +58,9 @@ class _SignupPageState extends State<SignupPage>
       'phone': phoneController.text,
     });
 
-    Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false);
+    context.go(
+      HomePage.id,
+    );
   }
 
   @override
@@ -341,7 +344,7 @@ class _SignupPageState extends State<SignupPage>
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pop(context);
+                            context.pop();
                           },
                           child: Hero(
                             tag: 'login',

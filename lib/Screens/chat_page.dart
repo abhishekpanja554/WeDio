@@ -9,6 +9,7 @@ import 'package:WEdio/backend/signalling.service.dart';
 import 'package:WEdio/backend/utility_class.dart';
 import 'package:WEdio/enums/message_state.dart';
 import 'package:WEdio/models/calls.dart';
+import 'package:WEdio/models/class_models.dart';
 import 'package:WEdio/models/message.dart';
 import 'package:WEdio/models/user.dart';
 import 'package:WEdio/providers/image_message_provider.dart';
@@ -17,12 +18,13 @@ import 'package:WEdio/widgets/image_loading_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
-  static const String id = 'chatpage';
+  static const String id = '/chatpage';
   final User? chatParticipant;
   final String conversationId;
 
@@ -135,7 +137,7 @@ class _ChatPageState extends State<ChatPage>
                       color: Color(0xFF005DAF),
                       size: 30,
                     ),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => context.pop(),
                   ),
                 ],
               ),
@@ -164,17 +166,12 @@ class _ChatPageState extends State<ChatPage>
                         widget.conversationId,
                         call,
                       );
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CallScreen(
-                            calleeId: widget.chatParticipant!.uid,
-                            callerId: _helper.getCurrentUser()!.uid,
-                            calleeName: widget.chatParticipant!.fullname,
-                            // conversationId: widget.conversationId,
-                            // call: call,
-                          ),
+                      context.push(
+                        CallScreen.id,
+                        extra: CallScreenArgs(
+                          calleeId: widget.chatParticipant!.uid,
+                          calleeName: widget.chatParticipant!.fullname,
+                          callerId: _helper.getCurrentUser()!.uid,
                         ),
                       );
                     },

@@ -8,11 +8,12 @@ import 'package:WEdio/widgets/custom_textField.dart';
 import 'package:WEdio/widgets/inapp_notification_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LoginPage extends StatefulWidget {
-  static const String id = 'loginpage';
+  static const String id = '/loginpage';
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -35,7 +36,7 @@ class _LoginPageState extends State<LoginPage>
         .signInWithEmailAndPassword(
             email: emailController.text, password: passwordController.text)
         .catchError((ex) {
-      Navigator.pop(context);
+      context.pop();
       FirebaseAuthException thisEx = ex;
       ScaffoldMessenger.maybeOf(context)!.showSnackBar(SnackBar(
         content: Text(thisEx.message!),
@@ -55,8 +56,8 @@ class _LoginPageState extends State<LoginPage>
               db, element.uid, element.fullname, element.phone);
         }
       });
-      Navigator.pop(context);
-      Navigator.pushNamedAndRemoveUntil(context, HomePage.id, (route) => false);
+      context.pop();
+      context.go(HomePage.id);
     });
   }
 
@@ -275,7 +276,7 @@ class _LoginPageState extends State<LoginPage>
                       //sign up button
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, SignupPage.id);
+                          context.push(SignupPage.id);
                         },
                         child: Hero(
                           tag: 'signup',

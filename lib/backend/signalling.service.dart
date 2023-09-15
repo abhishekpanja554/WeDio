@@ -22,7 +22,7 @@ class SignallingService {
 
     // listen onConnectError event
     socket!.onConnectError((data) {
-      // log("Connect Error $data");
+      log("Connect Error $data");
     });
 
     // connect socket
