@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:WEdio/Screens/call_screen.dart';
 import 'package:WEdio/Screens/reciever_screen.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
-import 'package:WEdio/backend/signalling.service.dart';
 import 'package:WEdio/backend/utility_class.dart';
 import 'package:WEdio/enums/message_state.dart';
 import 'package:WEdio/models/calls.dart';

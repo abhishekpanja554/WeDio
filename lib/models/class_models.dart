@@ -10,7 +10,7 @@ class CallScreenArgs {
   String calleeId;
   String calleeName;
   String callerId;
-  dynamic? offer;
+  dynamic offer;
   Key? key;
   CallScreenArgs({
     required this.calleeId,
