@@ -4,7 +4,7 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 
 List chatList = [];
 List<Map<String, dynamic>> usersList = [];
-late List<Contact> contacts;
-const String websocketUrl = "http://52.66.210.196:5000";
+List<Contact> contacts = [];
+const String websocketUrl = "https://webrtc-signalling-gpn6.onrender.com";
 String? fcmToken;
 dynamic incomingSDPOffer;

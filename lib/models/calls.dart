@@ -11,14 +11,14 @@ class Calls {
     required this.conversationId,
   });
 
-  factory Calls.fromMap(Map<String, dynamic> call) => Calls(
+  factory Calls.fromJson(Map<String, dynamic> call) => Calls(
         callId: call['callId'],
         callerId: call['callId'],
         recieverId: call['recieverId'],
         conversationId: call['conversationId'],
       );
 
-  Map<String, dynamic> toMap(Calls call) {
+  Map<String, dynamic> toJson(Calls call) {
     Map<String, dynamic> data = Map<String, dynamic>();
     data['callId'] = call.callId;
     data['callerId'] = call.callerId;

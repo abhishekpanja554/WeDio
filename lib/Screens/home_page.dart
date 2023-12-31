@@ -30,10 +30,6 @@ class _HomePageState extends State<HomePage> {
     _helper.updateContacts(context);
     pageController = PageController();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      // SignallingService.instance.init(
-      //   websocketUrl: websocketUrl,
-      //   selfCallerID: FirebaseHelper().getCurrentUser()!.uid,
-      // );
       // listen for incoming video call
       SignallingService.instance.socket!.on("newCall", (data) {
         if (mounted) {

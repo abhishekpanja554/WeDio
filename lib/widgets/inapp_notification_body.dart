@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:WEdio/Screens/call_screen.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
 import 'package:WEdio/global_variables.dart';
-import 'package:WEdio/main.dart';
 import 'package:WEdio/models/class_models.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +20,7 @@ class NotificationBody extends StatefulWidget {
 }
 
 class _NotificationBodyState extends State<NotificationBody> {
+  
   _joinCall({
     required String callerId,
     required String calleeId,

@@ -221,7 +221,7 @@ class FirebaseHelper {
   }
 
   Future<void> sendMessageToDB(Message message, String conversationId) async {
-    Map<String, dynamic> map = message.toMap();
+    Map<String, dynamic> map = message.toJson();
     await _firestore.collection('messages').add(map);
     await _firestore
         .collection('conversations')

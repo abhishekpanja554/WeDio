@@ -1,15 +1,12 @@
-import 'dart:ui';
 
 import 'package:WEdio/Screens/home_page.dart';
 import 'package:WEdio/Screens/signip_page.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
 import 'package:WEdio/widgets/custom_loading.dart';
 import 'package:WEdio/widgets/custom_textField.dart';
-import 'package:WEdio/widgets/inapp_notification_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:in_app_notification/in_app_notification.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LoginPage extends StatefulWidget {

@@ -23,7 +23,7 @@ class UtilityClass {
           .doc(conversationId.trim())
           .collection('Call');
 
-      var data = call.toMap(call);
+      var data = call.toJson(call);
 
       await callRef.doc('calling').set(data);
 

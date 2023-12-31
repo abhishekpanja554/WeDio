@@ -26,7 +26,7 @@ class Message {
     required this.isRead,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
       'content': this.content,
       'sender': this.sender,
@@ -51,7 +51,7 @@ class Message {
     return map;
   }
 
-  Message.fromMap(Map<String, dynamic> map) {
+  Message.fromJson(Map<String, dynamic> map) {
     this.content = map['content'];
     this.sender = map['sender'];
     this.timeStamp = map['time_stamp'];

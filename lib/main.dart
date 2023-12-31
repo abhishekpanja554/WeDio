@@ -1,13 +1,10 @@
 // import 'dart:io';
 // import 'package:WEdio/Screens/chat_page.dart';
-import 'package:WEdio/Screens/signip_page.dart';
-import 'package:WEdio/Screens/splash.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
 import 'package:WEdio/backend/signalling.service.dart';
 import 'package:WEdio/global_variables.dart';
 import 'package:WEdio/helpers/route_helper.dart';
 import 'package:WEdio/providers/image_message_provider.dart';
-import 'package:WEdio/widgets/inapp_notification_body.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +12,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:provider/provider.dart';
 
-import 'Screens/home_page.dart';
-import 'Screens/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +52,6 @@ class _MyAppState extends State<MyApp> {
         websocketUrl: websocketUrl,
         selfCallerID: FirebaseHelper().getCurrentUser()!.uid,
       );
-      // listen for incoming video call
     });
     super.initState();
   }

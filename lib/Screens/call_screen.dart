@@ -112,10 +112,21 @@ class _CallScreenState extends State<CallScreen> {
         ));
       });
 
+      RTCSessionDescription sessionDescription =
+          RTCSessionDescription(widget.offer["sdpOffer"]["sdp"], widget.offer["sdpOffer"]["type"]);
+      if (sessionDescription != null) {
+        // Check to make sure that the type of the session description is set.
+        if (sessionDescription.type != null &&
+                sessionDescription.type == ("answer") ||
+            sessionDescription.type == ("offer")) {
+          // Set the remote description.
+          await _rtcPeerConnection!.setRemoteDescription(sessionDescription);
+        }
+      }
       // set SDP offer as remoteDescription for peerConnection
-      await _rtcPeerConnection!.setRemoteDescription(
-        RTCSessionDescription(widget.offer["sdp"], widget.offer["type"]),
-      );
+      // await _rtcPeerConnection!.setRemoteDescription(
+      //   RTCSessionDescription(widget.offer["sdp"], widget.offer["type"]),
+      // );
 
       // create SDP answer
       RTCSessionDescription answer = await _rtcPeerConnection!.createAnswer();

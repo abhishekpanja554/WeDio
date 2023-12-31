@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:WEdio/Screens/call_screen.dart';
-import 'package:WEdio/Screens/caller_screen.dart';
 import 'package:WEdio/Screens/reciever_screen.dart';
 import 'package:WEdio/backend/firebase_helper.dart';
 import 'package:WEdio/backend/signalling.service.dart';
@@ -93,12 +92,12 @@ class _ChatPageState extends State<ChatPage>
     ));
 
     // listen for incoming video call
-    SignallingService.instance.socket!.on("newCall", (data) {
-      if (mounted) {
-        // set SDP Offer of incoming call
-        setState(() => incomingSDPOffer = data);
-      }
-    });
+    // SignallingService.instance.socket!.on("newCall", (data) {
+    //   if (mounted) {
+    //     // set SDP Offer of incoming call
+    //     setState(() => incomingSDPOffer = data);
+    //   }
+    // });
     super.initState();
   }
 
